@@ -26,9 +26,11 @@ export default function Navbar() {
     updatePlanCount();
 
     window.addEventListener("storage", updatePlanCount);
+    window.addEventListener("planUpdated", updatePlanCount);
 
     return () => {
       window.removeEventListener("storage", updatePlanCount);
+      window.removeEventListener("planUpdated", updatePlanCount);
     };
   }, []);
 
@@ -71,6 +73,7 @@ export default function Navbar() {
 
         {/* Counters */}
         <div className="flex items-center gap-3">
+
           <Link
             href="/my-plan"
             className="rounded-full bg-[#ccff00] px-4 py-2 text-sm font-bold text-black"
@@ -84,8 +87,8 @@ export default function Navbar() {
           >
             Saved 0
           </Link>
-        </div>
 
+        </div>
       </div>
     </nav>
   );
