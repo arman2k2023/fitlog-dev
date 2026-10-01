@@ -20,9 +20,13 @@ interface WorkoutDetailProps {
     };
 }
 
-export default function WorkoutDetail({ workout }: WorkoutDetailProps) {
+export default function WorkoutDetail({
+    workout,
+}: WorkoutDetailProps) {
     const [added, setAdded] = useState(false);
+    const [saved, setSaved] = useState(false);
 
+    // Add workout to today's plan
     const handleAddToPlan = () => {
         const existingPlan = JSON.parse(
             localStorage.getItem("todayPlan") || "[]"
@@ -42,6 +46,35 @@ export default function WorkoutDetail({ workout }: WorkoutDetailProps) {
         }
 
         setAdded(true);
+
+        window.dispatchEvent(new Event("planUpdated"));
+    };
+
+    // Save workout
+    const handleSaveWorkout = () => {
+        const existingSaved = JSON.parse(
+            localStorage.getItem("savedWorkouts") || "[]"
+        );
+
+        const alreadySaved = existingSaved.some(
+            (item: { id: number }) => item.id === workout.id
+        );
+
+        if (!alreadySaved) {
+            const updatedSaved = [
+                ...existingSaved,
+                workout,
+            ];
+
+            localStorage.setItem(
+                "savedWorkouts",
+                JSON.stringify(updatedSaved)
+            );
+        }
+
+        setSaved(true);
+
+        window.dispatchEvent(new Event("savedUpdated"));
     };
 
     return (
@@ -61,6 +94,7 @@ export default function WorkoutDetail({ workout }: WorkoutDetailProps) {
 
                 {/* Details */}
                 <div>
+
                     <p className="text-sm font-semibold tracking-[0.25em] text-[#ccff00]">
                         WORKOUT DETAILS
                     </p>
@@ -71,6 +105,7 @@ export default function WorkoutDetail({ workout }: WorkoutDetailProps) {
 
                     {/* Difficulty + Rating */}
                     <div className="mt-6 flex flex-wrap gap-3">
+
                         <span className="rounded-full border border-[#ccff00] px-4 py-2 text-sm text-[#ccff00]">
                             {workout.difficulty}
                         </span>
@@ -78,26 +113,45 @@ export default function WorkoutDetail({ workout }: WorkoutDetailProps) {
                         <span className="rounded-full bg-white/10 px-4 py-2 text-sm text-gray-300">
                             ⭐ {workout.rating}
                         </span>
+
                     </div>
 
-                    {/* Add to Today's Plan */}
-                    <button
-                        type="button"
-                        onClick={handleAddToPlan}
-                        className="mt-6 w-full rounded-xl bg-[#ccff00] px-6 py-4 font-bold text-black transition hover:opacity-90"
-                    >
-                        {added
-                            ? "ADDED TO TODAY'S PLAN ✓"
-                            : "ADD TO TODAY'S PLAN"}
-                    </button>
+                    {/* Buttons */}
+                    <div className="mt-6 grid gap-3 sm:grid-cols-2">
+
+                        {/* Add to Plan */}
+                        <button
+                            type="button"
+                            onClick={handleAddToPlan}
+                            className="w-full rounded-xl bg-[#ccff00] px-6 py-4 font-bold text-black transition hover:opacity-90"
+                        >
+                            {added
+                                ? "ADDED TO TODAY'S PLAN ✓"
+                                : "ADD TO TODAY'S PLAN"}
+                        </button>
+
+                        {/* Save */}
+                        <button
+                            type="button"
+                            onClick={handleSaveWorkout}
+                            className="w-full rounded-xl border border-white/20 px-6 py-4 font-bold text-white transition hover:border-[#ccff00] hover:text-[#ccff00]"
+                        >
+                            {saved
+                                ? "SAVED WORKOUT ✓"
+                                : "SAVE WORKOUT"}
+                        </button>
+
+                    </div>
 
                     {/* Muscle Groups */}
                     <div className="mt-8">
+
                         <p className="text-xs font-semibold tracking-widest text-gray-500">
                             MUSCLE GROUPS
                         </p>
 
                         <div className="mt-3 flex flex-wrap gap-2">
+
                             {workout.muscleGroups?.map((muscle) => (
                                 <span
                                     key={muscle}
@@ -106,16 +160,19 @@ export default function WorkoutDetail({ workout }: WorkoutDetailProps) {
                                     {muscle}
                                 </span>
                             ))}
+
                         </div>
                     </div>
 
                     {/* Equipment */}
                     <div className="mt-6">
+
                         <p className="text-xs font-semibold tracking-widest text-gray-500">
                             EQUIPMENT
                         </p>
 
                         <div className="mt-3 flex flex-wrap gap-2">
+
                             {Array.isArray(workout.equipment) ? (
                                 workout.equipment.map((item) => (
                                     <span
@@ -130,16 +187,18 @@ export default function WorkoutDetail({ workout }: WorkoutDetailProps) {
                                     {workout.equipment}
                                 </span>
                             )}
+
                         </div>
                     </div>
 
-                    {/* Workout Stats */}
+                    {/* Stats */}
                     <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
 
                         <div className="rounded-xl bg-[#111111] p-4">
                             <p className="text-xs text-gray-500">
                                 DURATION
                             </p>
+
                             <p className="mt-1 font-bold text-white">
                                 {workout.duration} min
                             </p>
@@ -149,6 +208,7 @@ export default function WorkoutDetail({ workout }: WorkoutDetailProps) {
                             <p className="text-xs text-gray-500">
                                 CALORIES
                             </p>
+
                             <p className="mt-1 font-bold text-white">
                                 {workout.caloriesBurned}
                             </p>
@@ -158,6 +218,7 @@ export default function WorkoutDetail({ workout }: WorkoutDetailProps) {
                             <p className="text-xs text-gray-500">
                                 SETS
                             </p>
+
                             <p className="mt-1 font-bold text-white">
                                 {workout.sets}
                             </p>
@@ -167,6 +228,7 @@ export default function WorkoutDetail({ workout }: WorkoutDetailProps) {
                             <p className="text-xs text-gray-500">
                                 REPS
                             </p>
+
                             <p className="mt-1 font-bold text-white">
                                 {workout.reps}
                             </p>
@@ -176,6 +238,7 @@ export default function WorkoutDetail({ workout }: WorkoutDetailProps) {
                             <p className="text-xs text-gray-500">
                                 RATING
                             </p>
+
                             <p className="mt-1 font-bold text-white">
                                 ⭐ {workout.rating}
                             </p>
@@ -187,6 +250,7 @@ export default function WorkoutDetail({ workout }: WorkoutDetailProps) {
 
             {/* Instructions */}
             <section className="mt-16">
+
                 <p className="text-sm font-semibold tracking-[0.25em] text-[#ccff00]">
                     HOW TO DO IT
                 </p>
@@ -196,20 +260,24 @@ export default function WorkoutDetail({ workout }: WorkoutDetailProps) {
                 </h2>
 
                 <ol className="mt-6 space-y-4">
-                    {workout.instructions?.map((instruction, index) => (
-                        <li
-                            key={index}
-                            className="flex gap-4 rounded-xl border border-white/10 bg-[#111111] p-5"
-                        >
-                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ccff00] text-sm font-bold text-black">
-                                {index + 1}
-                            </span>
 
-                            <p className="leading-7 text-gray-300">
-                                {instruction}
-                            </p>
-                        </li>
-                    ))}
+                    {workout.instructions?.map(
+                        (instruction, index) => (
+                            <li
+                                key={index}
+                                className="flex gap-4 rounded-xl border border-white/10 bg-[#111111] p-5"
+                            >
+                                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ccff00] text-sm font-bold text-black">
+                                    {index + 1}
+                                </span>
+
+                                <p className="leading-7 text-gray-300">
+                                    {instruction}
+                                </p>
+                            </li>
+                        )
+                    )}
+
                 </ol>
             </section>
         </>
