@@ -1,7 +1,37 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+
+interface Workout {
+  id: number;
+}
 
 export default function Navbar() {
+  const [planCount, setPlanCount] = useState(0);
+
+  useEffect(() => {
+    const updatePlanCount = () => {
+      const savedPlan = localStorage.getItem("todayPlan");
+
+      if (savedPlan) {
+        const plan: Workout[] = JSON.parse(savedPlan);
+        setPlanCount(plan.length);
+      } else {
+        setPlanCount(0);
+      }
+    };
+
+    updatePlanCount();
+
+    window.addEventListener("storage", updatePlanCount);
+
+    return () => {
+      window.removeEventListener("storage", updatePlanCount);
+    };
+  }, []);
+
   return (
     <nav className="border-b border-white/10 bg-[#080808]">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
@@ -45,7 +75,7 @@ export default function Navbar() {
             href="/my-plan"
             className="rounded-full bg-[#ccff00] px-4 py-2 text-sm font-bold text-black"
           >
-            Plan 0
+            Plan {planCount}
           </Link>
 
           <Link
