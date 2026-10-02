@@ -41,11 +41,25 @@ export default function Navbar() {
     updatePlanCount();
     updateSavedCount();
 
-    window.addEventListener("storage", updatePlanCount);
-    window.addEventListener("planUpdated", updatePlanCount);
+    window.addEventListener(
+      "storage",
+      updatePlanCount
+    );
 
-    window.addEventListener("storage", updateSavedCount);
-    window.addEventListener("savedUpdated", updateSavedCount);
+    window.addEventListener(
+      "planUpdated",
+      updatePlanCount
+    );
+
+    window.addEventListener(
+      "storage",
+      updateSavedCount
+    );
+
+    window.addEventListener(
+      "savedUpdated",
+      updateSavedCount
+    );
 
     return () => {
       window.removeEventListener(
@@ -72,12 +86,12 @@ export default function Navbar() {
 
   return (
     <nav className="border-b border-white/10 bg-[#080808]">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
+      <div className="mx-auto flex min-h-20 max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
 
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-3"
+          className="flex items-center gap-2"
         >
           <Image
             src="/logo.png"
@@ -85,51 +99,48 @@ export default function Navbar() {
             width={42}
             height={42}
             priority
-            className="h-10 w-10 object-contain"
+            className="h-9 w-9 object-contain sm:h-10 sm:w-10"
           />
 
-          <span className="text-2xl font-extrabold tracking-tight text-white">
+          <span className="text-xl font-extrabold tracking-tight text-white sm:text-2xl">
             FITLOG
           </span>
         </Link>
 
         {/* Navigation */}
-        <div className="flex items-center gap-8">
-
+        <div className="order-3 flex w-full items-center justify-center gap-4 sm:order-none sm:w-auto sm:gap-8">
           <Link
             href="/"
-            className="rounded-full border border-[#ccff00] px-5 py-2 text-sm font-medium text-white"
+            className="rounded-full border border-[#ccff00] px-4 py-2 text-xs font-medium text-white sm:px-5 sm:text-sm"
           >
             Workout
           </Link>
 
           <Link
             href="/my-plan"
-            className="text-sm font-medium text-gray-400 transition hover:text-white"
+            className="text-xs font-medium text-gray-400 transition hover:text-white sm:text-sm"
           >
             My Plan
           </Link>
-
         </div>
 
         {/* Counters */}
-        <div className="flex items-center gap-3">
-
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link
             href="/my-plan"
-            className="rounded-full bg-[#ccff00] px-4 py-2 text-sm font-bold text-black"
+            className="rounded-full bg-[#ccff00] px-3 py-2 text-xs font-bold text-black sm:px-4 sm:text-sm"
           >
             Plan {planCount}
           </Link>
 
           <Link
             href="/saved"
-            className="rounded-full border border-white/20 px-4 py-2 text-sm font-medium text-white"
+            className="rounded-full border border-white/20 px-3 py-2 text-xs font-medium text-white sm:px-4 sm:text-sm"
           >
             Saved {savedCount}
           </Link>
-
         </div>
+
       </div>
     </nav>
   );
