@@ -71,27 +71,27 @@ export default function WorkoutLibrary() {
     return (
         <section
             id="library"
-            className="bg-[#080808] px-6 py-20"
+            className="bg-[#080808] px-4 py-16 sm:px-6 sm:py-20"
         >
             <div className="mx-auto max-w-7xl">
 
                 {/* Section Header */}
-                <div className="mb-10">
+                <div className="mb-8 sm:mb-10">
                     <p className="text-sm font-semibold tracking-[0.25em] text-[#ccff00]">
                         WORKOUT LIBRARY
                     </p>
 
-                    <h2 className="mt-3 text-4xl font-extrabold text-white sm:text-5xl">
+                    <h2 className="mt-3 text-3xl font-extrabold text-white sm:text-5xl">
                         THE LIBRARY
                     </h2>
 
-                    <p className="mt-4 text-gray-400">
-                        Twelve lifts covering every major muscle group.
+                    <p className="mt-4 text-sm text-gray-400 sm:text-base">
+                        {workouts.length} lifts covering every major muscle group.
                     </p>
                 </div>
 
-                {/* Search + Filters */}
-                <div className="mb-10 flex flex-col gap-4 lg:flex-row">
+                {/* Filters */}
+                <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
                     {/* Search */}
                     <input
@@ -101,7 +101,7 @@ export default function WorkoutLibrary() {
                             setSearch(event.target.value)
                         }
                         placeholder="Search workouts..."
-                        className="w-full rounded-xl border border-white/10 bg-[#111111] px-5 py-4 text-white outline-none placeholder:text-gray-500 focus:border-[#ccff00] lg:max-w-md"
+                        className="w-full rounded-xl border border-white/10 bg-[#111111] px-5 py-4 text-sm text-white outline-none placeholder:text-gray-500 focus:border-[#ccff00]"
                     />
 
                     {/* Difficulty */}
@@ -110,7 +110,7 @@ export default function WorkoutLibrary() {
                         onChange={(event) =>
                             setDifficulty(event.target.value)
                         }
-                        className="rounded-xl border border-white/10 bg-[#111111] px-5 py-4 text-white outline-none focus:border-[#ccff00]"
+                        className="w-full rounded-xl border border-white/10 bg-[#111111] px-5 py-4 text-sm text-white outline-none focus:border-[#ccff00]"
                     >
                         <option value="All">
                             All Difficulties
@@ -129,13 +129,13 @@ export default function WorkoutLibrary() {
                         </option>
                     </select>
 
-                    {/* Muscle Group */}
+                    {/* Muscle */}
                     <select
                         value={muscle}
                         onChange={(event) =>
                             setMuscle(event.target.value)
                         }
-                        className="rounded-xl border border-white/10 bg-[#111111] px-5 py-4 text-white outline-none focus:border-[#ccff00]"
+                        className="w-full rounded-xl border border-white/10 bg-[#111111] px-5 py-4 text-sm text-white outline-none focus:border-[#ccff00]"
                     >
                         <option value="All">
                             All Muscles
@@ -166,15 +166,14 @@ export default function WorkoutLibrary() {
                         </option>
                     </select>
 
-                    {/* Clear Button */}
+                    {/* Clear Filters */}
                     <button
                         type="button"
                         onClick={handleClearFilters}
-                        className="rounded-xl border border-white/20 px-6 py-4 text-sm font-bold text-white transition hover:border-[#ccff00] hover:text-[#ccff00]"
+                        className="w-full rounded-xl border border-white/20 px-5 py-4 text-sm font-bold text-white transition hover:border-[#ccff00] hover:text-[#ccff00]"
                     >
                         CLEAR FILTERS
                     </button>
-
                 </div>
 
                 {/* Loading */}
@@ -188,7 +187,7 @@ export default function WorkoutLibrary() {
 
                 {/* Error */}
                 {!loading && error && (
-                    <div className="rounded-2xl border border-red-500/20 bg-[#111111] p-10 text-center">
+                    <div className="rounded-2xl border border-red-500/20 bg-[#111111] p-8 text-center sm:p-10">
                         <h3 className="text-2xl font-bold text-white">
                             Failed to load workouts
                         </h3>
@@ -203,7 +202,7 @@ export default function WorkoutLibrary() {
                 {!loading &&
                     !error &&
                     filteredWorkouts.length === 0 && (
-                        <div className="rounded-2xl border border-white/10 bg-[#111111] p-10 text-center">
+                        <div className="rounded-2xl border border-white/10 bg-[#111111] p-8 text-center sm:p-10">
                             <h3 className="text-2xl font-bold text-white">
                                 No workouts found
                             </h3>
@@ -218,7 +217,7 @@ export default function WorkoutLibrary() {
                 {!loading &&
                     !error &&
                     filteredWorkouts.length > 0 && (
-                        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                             {filteredWorkouts.map((workout) => (
                                 <WorkoutCard
                                     key={workout.id}
@@ -227,7 +226,6 @@ export default function WorkoutLibrary() {
                             ))}
                         </div>
                     )}
-
             </div>
         </section>
     );
