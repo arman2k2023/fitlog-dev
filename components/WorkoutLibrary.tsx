@@ -8,7 +8,10 @@ export default function WorkoutLibrary() {
     const [workouts, setWorkouts] = useState<Workout[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+
     const [search, setSearch] = useState("");
+    const [difficulty, setDifficulty] = useState("All");
+    const [muscle, setMuscle] = useState("All");
 
     useEffect(() => {
         const loadWorkouts = async () => {
@@ -39,11 +42,31 @@ export default function WorkoutLibrary() {
         loadWorkouts();
     }, []);
 
-    const filteredWorkouts = workouts.filter((workout) =>
-        workout.name
+    const filteredWorkouts = workouts.filter((workout) => {
+        const matchesSearch = workout.name
             .toLowerCase()
-            .includes(search.toLowerCase())
-    );
+            .includes(search.toLowerCase());
+
+        const matchesDifficulty =
+            difficulty === "All" ||
+            workout.difficulty === difficulty;
+
+        const matchesMuscle =
+            muscle === "All" ||
+            workout.muscleGroups?.includes(muscle);
+
+        return (
+            matchesSearch &&
+            matchesDifficulty &&
+            matchesMuscle
+        );
+    });
+
+    const handleClearFilters = () => {
+        setSearch("");
+        setDifficulty("All");
+        setMuscle("All");
+    };
 
     return (
         <section
@@ -67,8 +90,10 @@ export default function WorkoutLibrary() {
                     </p>
                 </div>
 
-                {/* Search */}
-                <div className="mb-10">
+                {/* Search + Filters */}
+                <div className="mb-10 flex flex-col gap-4 lg:flex-row">
+
+                    {/* Search */}
                     <input
                         type="text"
                         value={search}
@@ -76,8 +101,80 @@ export default function WorkoutLibrary() {
                             setSearch(event.target.value)
                         }
                         placeholder="Search workouts..."
-                        className="w-full rounded-xl border border-white/10 bg-[#111111] px-5 py-4 text-white outline-none placeholder:text-gray-500 focus:border-[#ccff00] sm:max-w-xl"
+                        className="w-full rounded-xl border border-white/10 bg-[#111111] px-5 py-4 text-white outline-none placeholder:text-gray-500 focus:border-[#ccff00] lg:max-w-md"
                     />
+
+                    {/* Difficulty */}
+                    <select
+                        value={difficulty}
+                        onChange={(event) =>
+                            setDifficulty(event.target.value)
+                        }
+                        className="rounded-xl border border-white/10 bg-[#111111] px-5 py-4 text-white outline-none focus:border-[#ccff00]"
+                    >
+                        <option value="All">
+                            All Difficulties
+                        </option>
+
+                        <option value="Beginner">
+                            Beginner
+                        </option>
+
+                        <option value="Intermediate">
+                            Intermediate
+                        </option>
+
+                        <option value="Advanced">
+                            Advanced
+                        </option>
+                    </select>
+
+                    {/* Muscle Group */}
+                    <select
+                        value={muscle}
+                        onChange={(event) =>
+                            setMuscle(event.target.value)
+                        }
+                        className="rounded-xl border border-white/10 bg-[#111111] px-5 py-4 text-white outline-none focus:border-[#ccff00]"
+                    >
+                        <option value="All">
+                            All Muscles
+                        </option>
+
+                        <option value="Chest">
+                            Chest
+                        </option>
+
+                        <option value="Arms">
+                            Arms
+                        </option>
+
+                        <option value="Back">
+                            Back
+                        </option>
+
+                        <option value="Legs">
+                            Legs
+                        </option>
+
+                        <option value="Shoulders">
+                            Shoulders
+                        </option>
+
+                        <option value="Core">
+                            Core
+                        </option>
+                    </select>
+
+                    {/* Clear Button */}
+                    <button
+                        type="button"
+                        onClick={handleClearFilters}
+                        className="rounded-xl border border-white/20 px-6 py-4 text-sm font-bold text-white transition hover:border-[#ccff00] hover:text-[#ccff00]"
+                    >
+                        CLEAR FILTERS
+                    </button>
+
                 </div>
 
                 {/* Loading */}
@@ -102,7 +199,7 @@ export default function WorkoutLibrary() {
                     </div>
                 )}
 
-                {/* No Search Result */}
+                {/* No Results */}
                 {!loading &&
                     !error &&
                     filteredWorkouts.length === 0 && (
@@ -112,7 +209,7 @@ export default function WorkoutLibrary() {
                             </h3>
 
                             <p className="mt-3 text-gray-400">
-                                Try searching with another workout name.
+                                Try changing your search or filters.
                             </p>
                         </div>
                     )}

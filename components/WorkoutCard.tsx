@@ -1,22 +1,29 @@
 import type { Workout } from "@/types/workout";
 import Link from "next/link";
+import Image from "next/image";
 
 interface WorkoutCardProps {
     workout: Workout;
 }
 
-export default function WorkoutCard({ workout }: WorkoutCardProps) {
+export default function WorkoutCard({
+    workout,
+}: WorkoutCardProps) {
     return (
         <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]">
+
             {/* Image */}
-            <img
+            <Image
                 src={workout.image}
                 alt={workout.name}
+                width={600}
+                height={400}
                 className="h-56 w-full object-cover"
             />
 
             {/* Content */}
             <div className="p-5">
+
                 {/* Difficulty + Rating */}
                 <div className="flex items-center justify-between">
                     <span className="rounded-full border border-[#ccff00] px-3 py-1 text-xs text-[#ccff00]">
@@ -30,7 +37,7 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
 
                 {/* Name */}
                 <Link href={`/workout/${workout.id}`}>
-                    <h3 className="mt-4 text-xl font-bold text-white hover:text-[#ccff00]">
+                    <h3 className="mt-4 text-xl font-bold text-white transition hover:text-[#ccff00]">
                         {workout.name}
                     </h3>
                 </Link>
@@ -44,8 +51,13 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
 
                 {/* Duration + Calories */}
                 <div className="mt-3 flex gap-4 text-sm text-gray-400">
-                    <span>{workout.duration} min</span>
-                    <span>{workout.caloriesBurned} calories</span>
+                    <span>
+                        {workout.duration} min
+                    </span>
+
+                    <span>
+                        {workout.caloriesBurned} calories
+                    </span>
                 </div>
 
                 {/* Muscle Groups */}
@@ -60,13 +72,14 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
                     ))}
                 </div>
 
-                {/* Add To Plan */}
-                <button
-                    type="button"
-                    className="mt-5 w-full rounded-full bg-[#ccff00] py-3 text-sm font-bold text-black transition hover:bg-[#d9ff4d]"
+                {/* View Details */}
+                <Link
+                    href={`/workout/${workout.id}`}
+                    className="mt-5 block w-full rounded-full bg-[#ccff00] py-3 text-center text-sm font-bold text-black transition hover:bg-[#d9ff4d]"
                 >
-                    ADD TO PLAN
-                </button>
+                    VIEW DETAILS
+                </Link>
+
             </div>
         </div>
     );
